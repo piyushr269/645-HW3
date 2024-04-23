@@ -4,7 +4,6 @@
    environment {
         DOCKER_IMAGE = 'piyushr269/surveyhw3:0.1'
         DOCKER_CREDENTIALS = credentials('docker')
-    DOCKER_TOKEN ='dckr_pat_EJKa9ir1HhdML4MKD97eN4l7Wnw'
     }
 
     stages {
@@ -22,7 +21,7 @@
 
         stage('Build Docker Image') {
             steps {
-              withCredentials([string(credentialsId: env.DOCKER_CREDENTIALS, variable: 'DOCKER_TOKEN')]) {
+              withCredentials([string(credentialsId: env.DOCKER_CREDENTIALS]) {
                     sh 'docker login -u piyushr269 -p ${DOCKER_CREDENTIALS}'
                     sh 'docker push piyushr269/surveyhw3:0.1'
                 }
