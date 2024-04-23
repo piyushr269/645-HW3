@@ -2,19 +2,19 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = 'surveyhw3:0.1'
-        DOCKER_REGISTRY = 'piyushr269/surveyhw3:0.1'
-        DOCKER_CREDENTIALS_ID = 'docker'  // ID for credentials stored in Jenkins
+        DOCKER_IMAGE = 'piyushr269/surveyhw3:0.1'
+        DOCKER_CREDENTIALS = credentials('docker')
+        BUILD_// ID for credentials stored in Jenkins
     }
 
     stages {
         stage('Checkout Code') {
             steps {
-                git 'https://github.com/piyushr269/645-HW3.git'  // Your repository URL
+                checkout scm  
             }
         }
 
-        stage('Build Application') {
+        stage('Build and Push docker image') {
             steps {
                 script {
                     // Building a Maven project, change if you use Gradle or other build tools
@@ -44,9 +44,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    // Deployment step, modify according to your deployment logic
-                    sh 'echo Deploying application...'
-                    // For example, if you deploy via SSH, you might use an ssh command to run docker commands on a remote server
+                    sh 'kubectl apply -f
                 }
             }
         }
