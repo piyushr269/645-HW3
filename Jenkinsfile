@@ -1,52 +1,45 @@
 pipeline {
     agent any
-      environment {
+
+    environment {
         DOCKER_IMAGE = 'piyushr269/surveyhw3:0.1'
         DOCKER_CREDENTIALS_ID = 'docker' // Use a descriptive ID for credentials
     }
-    
+
     stages {
-        stage('Checkout') {
+        stage('Checkout Code') {
             steps {
-                // Assuming Git SCM, replace URL with your repository URL
-                git url: 'https://github.com/piyushr269/645-HW3.git', branch: 'main'
+                checkout scm
             }
         }
 
-        stage('Build') {
+        stage('Build Project') {
             steps {
-                echo 'Running build steps'
-                // Simulate a build command, e.g., compiling a Java project:
-                // sh 'mvn clean package'
-                sh 'echo "Building the project..."'
+                sh 'mvn clean package' // Usually, you want to run package to compile and package your application
             }
         }
 
-        stage('Test') {
+        stage('Build and Push Docker Image') {
             steps {
-                echo 'Running tests'
-                // Simulate running tests, e.g., running unit tests with Maven:
-                // sh 'mvn test'
-                sh 'echo "Running tests..."'
+                script {
+                    docker.withRegistry('https://registry.hub.docker.com', credentials(DOCKER_CREDENTIALS_ID)) {
+                        def customImage = docker.build(DOCKER_IMAGE)
+                        customImage.push() // Combine build and push in one stage for simplicity and to use only one login session
+                    }
+                }
             }
         }
 
-        stage('Deploy') {
+        stage('Deploy to Kubernetes') {
             steps {
-                echo 'Deploying application'
-                // Simulate a deployment step
-                sh 'echo "Deploying to staging server..."'
+                script {
+                    kubernetesDeploy(
+                        configs: 'k8s/deployment.yaml', // Ensure you have the correct path to your Kubernetes deployment file
+                    )
+                }
             }
         }
     }
 
-    post {
-        success {
-            echo 'Build completed successfully.'
-        }
-
-        failure {
-            echo 'Build failed.'
-        }
-    }
+   
 }
