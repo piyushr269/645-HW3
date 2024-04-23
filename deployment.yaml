@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: surveyhw3
+spec:
+  replicas: 3
+  template:
+    spec:
+      containers:
+      - name: surveyhw32
+        image: piyushr269/surveyhw3:0.1
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: surveyhw32
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 8080
+  selector:
+    app: surveyhw32
