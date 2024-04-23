@@ -6,30 +6,29 @@ pipeline {
         DOCKER_CREDENTIALS_ID = 'docker' // Use a descriptive ID for credentials
     }
 
-    stages {
-        stage('Checkout Code') {
+     stage('Build') {
             steps {
-                checkout scm
+                echo 'Running build steps'
+                // Simulate a build command, e.g., compiling a Java project:
+                // sh 'mvn clean package'
+                sh 'echo "Building the project..."'
             }
         }
 
-        stage('Build Project') {
+        stage('Test') {
             steps {
-                sh 'mvn clean ' // Usually, you want to run package to compile and package your application
+                echo 'Running tests'
+                // Simulate running tests, e.g., running unit tests with Maven:
+                // sh 'mvn test'
+                sh 'echo "Running tests..."'
             }
         }
 
-        stage('Build and Push Docker Image') {
+        stage('Deploy') {
             steps {
-                
-                }
-            }
-        }
-
-        stage('Deploy to Kubernetes') {
-            steps {
-               
-                }
+                echo 'Deploying application'
+                // Simulate a deployment step
+                sh 'echo "Deploying to staging server..."'
             }
         }
     }
