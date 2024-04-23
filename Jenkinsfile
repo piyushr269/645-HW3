@@ -1,32 +1,28 @@
-pipeline {
+ pipeline {
     agent any
 
-    environment {
+   environment {
         DOCKER_IMAGE = 'piyushr269/surveyhw3:0.1'
         DOCKER_CREDENTIALS = credentials('docker')
-        BUILD_// ID for credentials stored in Jenkins
     }
 
     stages {
         stage('Checkout Code') {
             steps {
-                checkout scm  
+                checkout scm
             }
         }
 
-        stage('Build and Push docker image') {
+        stage('Build Project') {
             steps {
-                script {
-                    // Building a Maven project, change if you use Gradle or other build tools
-                    sh 'mvn clean package'
-                }
+                sh 'mvn clean package'
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build("$DOCKER_IMAGE", "./")
+                    docker.build(env.DOCKER_IMAGE)
                 }
             }
         }
@@ -34,17 +30,20 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    docker.withRegistry("https://$DOCKER_REGISTRY", DOCKER_CREDENTIALS_ID) {
-                        docker.image(DOCKER_IMAGE).push()
+                    docker.withRegistry('https://registry.hub.docker.com', env.REGISTRY_CREDENTIALS) {
+                        docker.image(env.DOCKER_IMAGE).push()
                     }
                 }
             }
         }
 
-        stage('Deploy') {
+        stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    sh 'kubectl apply -f
+                    kubernetesDeploy(
+                        configs: 'deployment.yaml',
+                        kubeconfigId: env.KUBECONFIG
+                    )
                 }
             }
         }
@@ -52,10 +51,10 @@ pipeline {
 
     post {
         success {
-            echo 'The pipeline has been executed successfully!'
+            echo 'Pipeline completed successfully.'
         }
         failure {
-            echo 'The pipeline failed.'
+            echo 'Pipeline failed.'
         }
     }
 }
