@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Config
+clusters:
+- name: "surveyhw3"
+  cluster:
+    server: "https://100.27.76.194/k8s/clusters/c-m-wqx7hmzv"
+    certificate-authority-data: "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJ2akNDQ\
+      VdPZ0F3SUJBZ0lCQURBS0JnZ3Foa2pPUFFRREFqQkdNUnd3R2dZRFZRUUtFeE5rZVc1aGJXbGoKY\
+      kdsemRHVnVaWEl0YjNKbk1TWXdKQVlEVlFRRERCMWtlVzVoYldsamJHbHpkR1Z1WlhJdFkyRkFNV\
+      GN4TXpnegpOamd4T0RBZUZ3MHlOREEwTWpNd01UUTJOVGhhRncwek5EQTBNakV3TVRRMk5UaGFNR\
+      Vl4SERBYUJnTlZCQW9UCkUyUjVibUZ0YVdOc2FYTjBaVzVsY2kxdmNtY3hKakFrQmdOVkJBTU1IV\
+      1I1Ym1GdGFXTnNhWE4wWlc1bGNpMWoKWVVBeE56RXpPRE0yT0RFNE1Ga3dFd1lIS29aSXpqMENBU\
+      VlJS29aSXpqMERBUWNEUWdBRUYyUk1iV05UUE5EYgpnaytsMENldWtDZi9Hd25HVjg4VUgzbmV4N\
+      25nMnlKeTl5blovQXRIZUFWVVdRZG9EWXRnU0tzQk9hbVZJQ3FDClh1RlJzMzZjMEtOQ01FQXdEZ\
+      1lEVlIwUEFRSC9CQVFEQWdLa01BOEdBMVVkRXdFQi93UUZNQU1CQWY4d0hRWUQKVlIwT0JCWUVGS\
+      TBEWk02V2RTempZelpIUTNOSVhwb0RJWGxnTUFvR0NDcUdTTTQ5QkFNQ0Ewa0FNRVlDSVFEeAo0d\
+      HNzTmVyRGJwQWE1eUxLTUxVeERDS2xML1h5a2VuMGdmRGlYcHM5WmdJaEFQN2t3ZXA1SWpoekYyY\
+      k4zVE51CmJaK0lUcW1Cd0VJaGdmbGpPNjlBVGdMdAotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0t"
+
+users:
+- name: "surveyhw3"
+  user:
+    token: "kubeconfig-user-cn4v27vrrt:gcthpgrjk6n5dljrbb778n5trrbjkc6nmz52f6gxlbp9wd8wx2l229"
+
+
+contexts:
+- name: "surveyhw3"
+  context:
+    user: "surveyhw3"
+    cluster: "surveyhw3"
+
+current-context: "surveyhw3"
