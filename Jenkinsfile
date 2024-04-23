@@ -1,12 +1,19 @@
 pipeline {
     agent any
-
-    environment {
+      environment {
         DOCKER_IMAGE = 'piyushr269/surveyhw3:0.1'
         DOCKER_CREDENTIALS_ID = 'docker' // Use a descriptive ID for credentials
     }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                // Assuming Git SCM, replace URL with your repository URL
+                git url: 'https://github.com/piyushr269/645-HW3.git', branch: 'main'
+            }
+        }
 
-     stage('Build') {
+        stage('Build') {
             steps {
                 echo 'Running build steps'
                 // Simulate a build command, e.g., compiling a Java project:
@@ -35,10 +42,11 @@ pipeline {
 
     post {
         success {
-            echo 'Pipeline completed successfully.'
+            echo 'Build completed successfully.'
         }
+
         failure {
-            echo 'Pipeline failed.'
+            echo 'Build failed.'
         }
     }
 }
