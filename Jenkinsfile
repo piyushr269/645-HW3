@@ -1,56 +1,63 @@
 pipeline {
     agent any
 
-
     environment {
-        // Define the variable for the JAR filename
-         DOCKERHUB_PASS = credentials("docker")
-        JAR_FILE = 'target/SpringBoot-0.0.1-SNAPSHOT.jar'
+        DOCKER_IMAGE = 'surveyhw3:0.1'
+        DOCKER_REGISTRY = 'piyushr269/surveyhw3:0.1'
+        DOCKER_CREDENTIALS_ID = 'docker'  // ID for credentials stored in Jenkins
     }
 
     stages {
-        stage('Checkout') {
+        stage('Checkout Code') {
             steps {
-                // Check out the source code from version control
-                checkout scm
-                
+                git 'https://github.com/piyushr269/645-HW3.git'  // Your repository URL
             }
         }
 
-        stage('Build') {
+        stage('Build Application') {
             steps {
-                // Run Maven build
-                sh 'mvn clean package'
-            
+                script {
+                    // Building a Maven project, change if you use Gradle or other build tools
+                    sh 'mvn clean package'
+                }
             }
         }
 
-        stage('Archive') {
+        stage('Build Docker Image') {
             steps {
-                // Archive the built JAR file
-                archiveArtifacts artifacts: "${env.JAR_FILE}", onlyIfSuccessful: true
+                script {
+                    docker.build("$DOCKER_IMAGE", "./")
+                }
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    docker.withRegistry("https://$DOCKER_REGISTRY", DOCKER_CREDENTIALS_ID) {
+                        docker.image(DOCKER_IMAGE).push()
+                    }
+                }
             }
         }
 
         stage('Deploy') {
-            when {
-                // This could be changed to a condition like branch == 'main'
-                expression { env.BRANCH_NAME == 'main' }
-            }
             steps {
-                // Add steps to deploy the JAR file to your server/environment
-                echo 'Deploying application...'
-                // Example: sh 'scp ${env.JAR_FILE} user@server:/path/to/deploy'
+                script {
+                    // Deployment step, modify according to your deployment logic
+                    sh 'echo Deploying application...'
+                    // For example, if you deploy via SSH, you might use an ssh command to run docker commands on a remote server
+                }
             }
         }
     }
 
     post {
         success {
-            echo 'Build and archive steps completed successfully.'
+            echo 'The pipeline has been executed successfully!'
         }
         failure {
-            echo 'The build failed.'
+            echo 'The pipeline failed.'
         }
     }
 }
