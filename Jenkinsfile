@@ -15,7 +15,7 @@
 
         stage('Build Project') {
             steps {
-                sh 'mvn clean package'
+                sh 'mvn clean'
             }
         }
 
