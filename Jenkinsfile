@@ -4,6 +4,7 @@ pipeline {
 
     environment {
         // Define the variable for the JAR filename
+         DOCKERHUB_PASS = credentials("docker")
         JAR_FILE = 'target/SpringBoot-0.0.1-SNAPSHOT.jar'
     }
 
@@ -12,6 +13,7 @@ pipeline {
             steps {
                 // Check out the source code from version control
                 checkout scm
+                
             }
         }
 
@@ -19,6 +21,12 @@ pipeline {
             steps {
                 // Run Maven build
                 sh 'mvn clean package'
+                sh 'rm -rf var'
+                sh 'jar -cvf SpringBoot-0.0.1-SNAPSHOT.jar -C src/main/webapp/ .'
+                def BUILD_TIMESTAMP = sh(script: 'date +%Y%m%d%H%M%S', returnStdout: true).trim()
+                sh "docker login -u piyushr269 -p ${DOCKERHUB_PASS}"
+                sh "docker build -t piyushr269/surveyhw3:${0.1} ."
+                sh "docker push piyushr269/surveyhw3:${0.1}"
             }
         }
 
