@@ -1,12 +1,6 @@
 pipeline {
     agent any
 
-    tools {
-        // Make sure Maven is configured in Jenkins Global Tool Configuration
-        maven 'Maven 3.6.3'
-        // Make sure Java is configured in Jenkins Global Tool Configuration
-        jdk 'OpenJDK 11'
-    }
 
     environment {
         // Define the variable for the JAR filename
