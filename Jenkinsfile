@@ -1,9 +1,9 @@
- pipeline {
+pipeline {
     agent any
 
-   environment {
+    environment {
         DOCKER_IMAGE = 'piyushr269/surveyhw3:0.1'
-        DOCKER_CREDENTIALS = credentials('docker')
+        DOCKER_CREDENTIALS_ID = 'docker' // Use a descriptive ID for credentials
     }
 
     stages {
@@ -15,27 +15,16 @@
 
         stage('Build Project') {
             steps {
-                sh 'mvn clean'
+                sh 'mvn clean package' // Usually, you want to run package to compile and package your application
             }
         }
 
-        stage('Build Docker Image') {
-            steps {
-              withCredentials([string(credentialsId: env.DOCKER_CREDENTIALS]) {
-                    sh 'docker login -u piyushr269 -p ${DOCKER_CREDENTIALS}'
-                    sh 'docker push piyushr269/surveyhw3:0.1'
-                }
-                script {
-                    docker.build(env.DOCKER_IMAGE)
-                }
-            }
-        }
-
-        stage('Push Docker Image') {
+        stage('Build and Push Docker Image') {
             steps {
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com', env.DOCKER_CREDENTIALS) {
-                        docker.image(env.DOCKER_IMAGE).push()
+                    docker.withRegistry('https://registry.hub.docker.com', credentials(DOCKER_CREDENTIALS_ID)) {
+                        def customImage = docker.build(DOCKER_IMAGE)
+                        customImage.push() // Combine build and push in one stage for simplicity and to use only one login session
                     }
                 }
             }
@@ -45,8 +34,8 @@
             steps {
                 script {
                     kubernetesDeploy(
-                        configs: 'deployment.yaml',
-                        kubeconfigId: env.KUBECONFIG
+                        configs: 'deployment.yaml', // Ensure you have the correct path to your Kubernetes deployment file
+                        kubeconfigId: 'kubeconfig-id' // Specify the ID of your Kubernetes configuration stored in Jenkins credentials
                     )
                 }
             }
