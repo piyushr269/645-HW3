@@ -30,7 +30,7 @@
         stage('Push Docker Image') {
             steps {
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com', env.REGISTRY_CREDENTIALS) {
+                    docker.withRegistry('https://registry.hub.docker.com', env.DOCKER_CREDENTIALS) {
                         docker.image(env.DOCKER_IMAGE).push()
                     }
                 }
